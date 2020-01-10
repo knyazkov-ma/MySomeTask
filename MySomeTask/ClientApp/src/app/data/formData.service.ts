@@ -1,93 +1,72 @@
-import { Injectable }                        from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import { FormData, Personal, Address }       from './formData.model';
-import { WorkflowService }                   from '../workflow/workflow.service';
-import { STEPS }                             from '../workflow/workflow.model';
+import { FormData, General, Location } from './formData.model';
+import { WorkflowService } from '../workflow/workflow.service';
+import { STEPS } from '../workflow/workflow.model';
 
 @Injectable()
 export class FormDataService {
 
-    private formData: FormData = new FormData();
-    private isPersonalFormValid: boolean = false;
-    private isWorkFormValid: boolean = false;
-    private isAddressFormValid: boolean = false;
+  private formData: FormData = new FormData();
+  private isGeneralFormValid: boolean = false;
+  private isLocationFormValid: boolean = false;
 
-    constructor(private workflowService: WorkflowService) { 
-    }
+  constructor(private workflowService: WorkflowService) {
+  }
 
-    getPersonal(): Personal {
-        // Return the Personal data
-        var personal: Personal = {
-            firstName: this.formData.firstName,
-            lastName: this.formData.lastName,
-            email: this.formData.email
-        };
-        return personal;
-    }
+  getGeneral(): General {
+    // Return the General data
+    var general: General = {
+      email: this.formData.email,
+      password: this.formData.password      
+    };
+    return general;
+  }
 
-    setPersonal(data: Personal) {
-        // Update the Personal data only when the Personal Form had been validated successfully
-        this.isPersonalFormValid = true;
-        this.formData.firstName = data.firstName;
-        this.formData.lastName = data.lastName;
-        this.formData.email = data.email;
-        // Validate Personal Step in Workflow
-        this.workflowService.validateStep(STEPS.personal);
-    }
+  setGeneral(data: General) {
+    // Update the General data only when the General Form had been validated successfully
+    this.isGeneralFormValid = true;
+    this.formData.email = data.email;
+    this.formData.password = data.password;
+    // Validate General Step in Workflow
+    this.workflowService.validateStep(STEPS.general);
+  }  
 
-    getWork() : string {
-        // Return the work type
-        return this.formData.work;
-    }
-    
-    setWork(data: string) {
-        // Update the work type only when the Work Form had been validated successfully
-        this.isWorkFormValid = true;
-        this.formData.work = data;
-        // Validate Work Step in Workflow
-        this.workflowService.validateStep(STEPS.work);
-    }
+  getLocation(): Location {
+    // Return the Location data
+    var location: Location = {
+      country: this.formData.country,
+      province: this.formData.province
+    };
+    return location;
+  }
 
-    getAddress() : Address {
-        // Return the Address data
-        var address: Address = {
-            street: this.formData.street,
-            city: this.formData.city,
-            state: this.formData.state,
-            zip: this.formData.zip
-        };
-        return address;
-    }
+  setLocation(data: Location) {
+    // Update the Location data only when the Location Form had been validated successfully
+    this.isLocationFormValid = true;
+    this.formData.country = data.country;
+    this.formData.province = data.province;
+    // Validate Location Step in Workflow
+    this.workflowService.validateStep(STEPS.location);
+  }
 
-    setAddress(data: Address) {
-        // Update the Address data only when the Address Form had been validated successfully
-        this.isAddressFormValid = true;
-        this.formData.street = data.street;
-        this.formData.city = data.city;
-        this.formData.state = data.state;
-        this.formData.zip = data.zip;
-        // Validate Address Step in Workflow
-        this.workflowService.validateStep(STEPS.address);
-    }
+  getFormData(): FormData {
+    // Return the entire Form Data
+    return this.formData;
+  }
 
-    getFormData(): FormData {
-        // Return the entire Form Data
-        return this.formData;
-    }
+  resetFormData(): FormData {
+    // Reset the workflow
+    this.workflowService.resetSteps();
+    // Return the form data after all this.* members had been reset
+    this.formData.clear();
+    this.isGeneralFormValid = this.isLocationFormValid = false;
+    return this.formData;
+  }
 
-    resetFormData(): FormData {
-        // Reset the workflow
-        this.workflowService.resetSteps();
-        // Return the form data after all this.* members had been reset
-        this.formData.clear();
-        this.isPersonalFormValid = this.isWorkFormValid = this.isAddressFormValid = false;
-        return this.formData;
-    }
-
-    isFormValid() {
-        // Return true if all forms had been validated successfully; otherwise, return false
-        return this.isPersonalFormValid &&
-                this.isWorkFormValid && 
-                this.isAddressFormValid;
-    }
+  isFormValid() {
+    // Return true if all forms had been validated successfully; otherwise, return false
+    return this.isGeneralFormValid &&
+      this.isLocationFormValid;
+  }
 }
