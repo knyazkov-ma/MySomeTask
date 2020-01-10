@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-
-import { FormData, General, Location } from './formData.model';
+import { Injectable, Inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { FormData, General, Location, Country } from './formData.model';
 
 
 
@@ -10,8 +10,11 @@ export class FormDataService {
   private formData: FormData = new FormData();
   private isGeneralFormValid: boolean = false;
   private isLocationFormValid: boolean = false;
+  private baseUrl: string;
 
-  constructor() {
+  constructor(private http: HttpClient,
+    @Inject('BASE_URL') baseUrl: string) {
+    this.baseUrl = baseUrl;
   }
 
   getGeneral(): General {
@@ -69,13 +72,25 @@ export class FormDataService {
       this.isLocationFormValid;
   }
 
-  getCountries(): string[] {
+  getCountries(): Country[] {
     
-    return ['Country1', 'Country2', 'Country3'];
+    var countries: Country[];
+
+    this.http.get<Country[]>(this.baseUrl + 'RegisterUser/countries').subscribe(result => {
+      countries = result;
+    }, error => console.error(error));
+
+    return countries;
   }
 
-  getProvinciesByCountry(country: string): string[] {
-    return [country + ' Province1', country + 'Province2', country + 'Province3'];
+  getProvinciesByCountry(code: string): string[] {
+    var provincies: string[];
+
+    this.http.get<string[]>(this.baseUrl + 'RegisterUser/provincies/' + code).subscribe(result => {
+      provincies = result;
+    }, error => console.error(error));
+
+    return provincies;
   }
   
 }

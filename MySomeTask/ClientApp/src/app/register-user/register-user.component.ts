@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { FormData, General, Location } from '../data/formData.model';
+import { Component, OnInit } from '@angular/core';
+import { FormData, General, Location, Country } from '../data/formData.model';
 import { FormDataService } from '../data/formData.service';
 
 
@@ -10,7 +10,7 @@ import { FormDataService } from '../data/formData.service';
 
 export class RegisterUserComponent implements OnInit {
 
-  countries: string[];
+  countries: Country[];
   provincies: string[];
 
   formData: FormData;
@@ -18,16 +18,19 @@ export class RegisterUserComponent implements OnInit {
   validateStep1: boolean;
 
   constructor(private formDataService: FormDataService) {
+   
   }
 
+  
+
   ngOnInit() {
-    this.isValidStep1 = false;
+    this.isValidStep1 = true;
     this.validateStep1 = false;
 
     this.formData = this.formDataService.getFormData();
 
     this.countries = this.formDataService.getCountries();
-    this.provincies = this.formDataService.getProvinciesByCountry(this.countries[0]);
+    this.provincies = this.formDataService.getProvinciesByCountry(this.countries[0].code);
 
     console.log('General feature loaded!');
   }

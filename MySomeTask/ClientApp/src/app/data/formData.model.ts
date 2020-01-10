@@ -25,3 +25,8 @@ export class Location {
   country: string = '';
   province: string = '';
 }
+
+export class Country {
+  code: string = '';
+  name: string = '';
+}
