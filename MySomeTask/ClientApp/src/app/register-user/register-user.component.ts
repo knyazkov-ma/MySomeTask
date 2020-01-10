@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { General } from '../data/formData.model';
+import { FormData, General, Location } from '../data/formData.model';
 import { FormDataService } from '../data/formData.service';
 
 
@@ -10,15 +10,32 @@ import { FormDataService } from '../data/formData.service';
 
 export class RegisterUserComponent implements OnInit {
 
-  title: "asdasd";
-  general: General;
+  countries: string[];
+  provincies: string[];
+
+  formData: FormData;
+  isValidStep1: boolean;
+  validateStep1: boolean;
 
   constructor(private formDataService: FormDataService) {
   }
 
   ngOnInit() {
-    this.general = this.formDataService.getGeneral();
+    this.isValidStep1 = false;
+    this.validateStep1 = false;
+
+    this.formData = this.formDataService.getFormData();
+
+    this.countries = this.formDataService.getCountries();
+    this.provincies = this.formDataService.getProvinciesByCountry(this.countries[0]);
+
     console.log('General feature loaded!');
+  }
+
+  goToStep2() {
+    alert();
+    this.validateStep1 = true;
+    this.isValidStep1 = false;
   }
   
 }

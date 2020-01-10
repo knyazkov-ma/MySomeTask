@@ -11,7 +11,6 @@ import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { ArchwizardModule } from '../../node_modules/ng2-archwizard';
 
-import { WorkflowService } from './workflow/workflow.service';
 import { FormDataService } from './data/formData.service';
 
 @NgModule({
@@ -32,8 +31,7 @@ import { FormDataService } from './data/formData.service';
     ])
   ],
   providers: [
-    { provide: FormDataService, useClass: FormDataService },
-    { provide: WorkflowService, useClass: WorkflowService }],
+    { provide: FormDataService, useClass: FormDataService }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

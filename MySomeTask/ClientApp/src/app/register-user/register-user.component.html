@@ -1,38 +1,75 @@
 <h1>Register user</h1>
 
 <wizard>
-  <wizard-step stepTitle="General" [canExit]='true'>
+  <wizard-step stepTitle="Step 1" [canExit]='true'>
     <div class="tab-pane">
-      <h4 class="head text-center">{{title}}</h4>
+      <h4 class="head text-center">General user information</h4>
       <br />
       <div class='row'>
         <div class='col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8'>
-          
+
           <div class="form-group">
             <label class="control-label" for="email">Email</label>
-            <input class="form-control input-md" #email="ngModel" required pattern="^[^\s@]+@[^\s@]+\.[^\s@]{2,}$" id="email" name="email" type="text" placeholder="Email" [(ngModel)]="general.email">
-            <div class="alert alert-danger" [hidden]="email.valid">Email is required and must be valid</div>            
+            <input class="form-control input-md" #email="ngModel" required pattern="^[^\s@]+@[^\s@]+\.[^\s@]{2,}$" id="email" name="email" type="text" placeholder="Email" [(ngModel)]="formData.email">
+            <div class="alert alert-danger" [hidden]="email.valid || !validateStep1">Email is required and must be valid</div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label" for="password">Password</label>
+            <input class="form-control input-md" #password="ngModel" id="password" name="password" type="password" [(ngModel)]="formData.password">
+            <div class="alert alert-danger" [hidden]="password.valid || !validateStep1">Password is required and must be valid</div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label" for="confirmPassword">Confirm password</label>
+            <input class="form-control input-md" #confirmPassword="ngModel" id="confirmPassword" name="confirmPassword" type="password" [(ngModel)]="formData.confirmPassword">
+            <div class="alert alert-danger" [hidden]="confirmPassword.valid || !validateStep1">Password is required and must be valid</div>
+          </div>
+
+          <div class="form-group">
+            <input type="checkbox" #agree="ngModel" id="agree" name="agree" [(ngModel)]="formData.agree">&nbsp;
+            <label class="control-label" for="agree">Agree work for food</label>
+            <div class="alert alert-danger" [hidden]="!formData.agree || !validateStep1">Agree is required</div>
           </div>
 
           <div class="form-group text-center">
-            <!--<button class="btn btn-success btn-outline-rounded btn-info" [disabled]="!personalForm.valid" (click)="goToNext(personalForm)"> Next <span style="margin-left:10px;" class="glyphicon glyphicon-arrow-right"></span></button>-->
-            <button class="btn btn-success btn-outline-rounded btn-info" type="button" nextStep> Next <span style="margin-left:10px;" class="glyphicon glyphicon-arrow-right"></span></button>
+            <button class="btn btn-success btn-outline-rounded btn-info" type="button" [disabled]="!isValidStep1" (click)="goToStep2()" nextStep> Go to Step 2 </button>
           </div>
         </div>
       </div>
     </div>
   </wizard-step>
 
-  <wizard-step stepTitle="Location" awOptionalStep>
-    <div>Content of Location</div>
-    <button class="btn btn-primary" type="button" previousStep><<</button>
-    <button class="btn btn-primary" type="button" nextStep>>></button>
-  </wizard-step>
+  <wizard-step stepTitle="Step 2" awOptionalStep>
+    <div class="tab-pane">
+      <h4 class="head text-center">Location user information</h4>
+      <br />
+      <div class='row'>
+        <div class='col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8'>
 
-  <wizard-step stepTitle="Finish">
-    <div>Content of Finish</div>
-    <button class="btn btn-primary" type="button" previousStep><<</button>
-    <button class="btn btn-primary" type="button" (click)="finishFunction()">Create user</button>
+          <div class="form-group">
+            <label class="control-label" for="country">Country</label>
+            <select class="form-control input-md" id="country" name="country">
+              <option *ngFor="let value of countries" [ngValue]="value" selected>{{value}}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label" for="province">Province</label>
+            <select class="form-control input-md" id="province" name="province">
+              <option *ngFor="let value of provincies" [ngValue]="value" selected>{{value}}</option>
+            </select>
+          </div>
+          
+          <div class="form-group text-center">
+            <!--<button class="btn btn-success btn-outline-rounded btn-info" [disabled]="!personalForm.valid" (click)="goToNext(personalForm)"> Next <span style="margin-left:10px;" class="glyphicon glyphicon-arrow-right"></span></button>-->
+            <button class="btn btn-success btn-outline-rounded btn-info" type="button" previousStep> Back to Step 1 </button>
+            <button class="btn btn-success btn-outline-rounded btn-info" type="button" nextStep> Save </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </wizard-step>
 
 </wizard>

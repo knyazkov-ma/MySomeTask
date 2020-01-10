@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { FormData, General, Location } from './formData.model';
-import { WorkflowService } from '../workflow/workflow.service';
-import { STEPS } from '../workflow/workflow.model';
+
+
 
 @Injectable()
 export class FormDataService {
@@ -11,7 +11,7 @@ export class FormDataService {
   private isGeneralFormValid: boolean = false;
   private isLocationFormValid: boolean = false;
 
-  constructor(private workflowService: WorkflowService) {
+  constructor() {
   }
 
   getGeneral(): General {
@@ -29,7 +29,7 @@ export class FormDataService {
     this.formData.email = data.email;
     this.formData.password = data.password;
     // Validate General Step in Workflow
-    this.workflowService.validateStep(STEPS.general);
+    
   }  
 
   getLocation(): Location {
@@ -46,8 +46,8 @@ export class FormDataService {
     this.isLocationFormValid = true;
     this.formData.country = data.country;
     this.formData.province = data.province;
-    // Validate Location Step in Workflow
-    this.workflowService.validateStep(STEPS.location);
+   
+    
   }
 
   getFormData(): FormData {
@@ -57,7 +57,6 @@ export class FormDataService {
 
   resetFormData(): FormData {
     // Reset the workflow
-    this.workflowService.resetSteps();
     // Return the form data after all this.* members had been reset
     this.formData.clear();
     this.isGeneralFormValid = this.isLocationFormValid = false;
@@ -69,4 +68,14 @@ export class FormDataService {
     return this.isGeneralFormValid &&
       this.isLocationFormValid;
   }
+
+  getCountries(): string[] {
+    
+    return ['Country1', 'Country2', 'Country3'];
+  }
+
+  getProvinciesByCountry(country: string): string[] {
+    return [country + ' Province1', country + 'Province2', country + 'Province3'];
+  }
+  
 }
