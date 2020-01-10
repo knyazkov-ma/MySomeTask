@@ -9,7 +9,10 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { RegisterUserComponent } from './register-user/register-user.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
-import { ArchwizardModule } from 'node_modules/ng2-archwizard';
+import { ArchwizardModule } from '../../node_modules/ng2-archwizard';
+
+import { WorkflowService } from './workflow/workflow.service';
+import { FormDataService } from './data/formData.service';
 
 @NgModule({
   declarations: [
@@ -28,7 +31,9 @@ import { ArchwizardModule } from 'node_modules/ng2-archwizard';
       { path: '', component: RegisterUserComponent, pathMatch: 'full' },
     ])
   ],
-  providers: [],
+  providers: [
+    { provide: FormDataService, useClass: FormDataService },
+    { provide: WorkflowService, useClass: WorkflowService }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
