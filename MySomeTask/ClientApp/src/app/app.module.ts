@@ -5,10 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
-import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { RegisterUserComponent } from './register-user/register-user.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { ArchwizardModule } from '../../node_modules/ng2-archwizard';
 
 import { FormDataService } from './data/formData.service';
@@ -16,10 +13,7 @@ import { FormDataService } from './data/formData.service';
 @NgModule({
   declarations: [
     AppComponent,
-    NavMenuComponent,
-    RegisterUserComponent,
-    CounterComponent,
-    FetchDataComponent
+    RegisterUserComponent    
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

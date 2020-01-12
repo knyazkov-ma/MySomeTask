@@ -14,14 +14,14 @@ namespace MySomeTask.Controllers
     public IEnumerable<dynamic> GetCountries()
     {
       return Enumerable.Range(1, 5).Select(index =>
-        new { code = $"code{index + 1}", name = $"Country {index + 1}" }
+        new { code = $"code{index}", name = $"Country {index}" }
       );
     }
 
     [HttpGet("provincies/{code}")]    
     public IEnumerable<string> GetProvincies([FromRoute]string code)
     {
-      return Enumerable.Range(1, 5).Select(index => $"{code} - Province {index + 1}");
+      return Enumerable.Range(1, 5).Select(index => $"{code} - Province {index}");
     }
   }
 }

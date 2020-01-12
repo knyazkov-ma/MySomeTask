@@ -10,18 +10,19 @@ import { FormDataService } from '../data/formData.service';
 
 export class RegisterUserComponent implements OnInit {
 
-  countries: Country[];
-  provincies: string[];
 
   formData: FormData;
   isValidStep1: boolean;
   validateStep1: boolean;
+  selectedCountry: Country;
+  selectedProvince: string;
 
   constructor(private formDataService: FormDataService) {
-   
+    this.selectedCountry = null;
+    this.selectedProvince = null;
   }
 
-  
+
 
   ngOnInit() {
     this.isValidStep1 = true;
@@ -29,8 +30,15 @@ export class RegisterUserComponent implements OnInit {
 
     this.formData = this.formDataService.getFormData();
 
-    /*this.formDataService.getCountries();
-    this.formDataService.getProvinciesByCountry(this.countries[0].code);*/
+    this.formDataService.getCountries()
+      .then(_ => {
+        this.selectedCountry = this.formDataService.countries[0];
+        this.formDataService.getProvinciesByCountry(this.formDataService.countries[0].code)
+          .then(_ => {
+            this.selectedProvince = this.formDataService.provincies[0];
+          });
+      });
+
 
     console.log('General feature loaded!');
   }
@@ -40,5 +48,16 @@ export class RegisterUserComponent implements OnInit {
     this.validateStep1 = true;
     this.isValidStep1 = false;
   }
-  
+
+  countryChange(value) {
+    this.selectedCountry = value;
+    this.formDataService.getProvinciesByCountry(value.code)
+      .then(_ => {
+        this.selectedProvince = this.formDataService.provincies[0];
+      });
+  }
+
+  provinceChange(value) {
+    this.selectedProvince = value;    
+  }
 }

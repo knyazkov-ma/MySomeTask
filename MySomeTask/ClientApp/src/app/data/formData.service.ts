@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormData, General, Location, Country } from './formData.model';
-import 'rxjs  ';
+
 
 @Injectable()
 export class FormDataService {
@@ -18,19 +18,19 @@ export class FormDataService {
 
   constructor(private http: HttpClient,
     @Inject('BASE_URL') baseUrl: string) {
-      this.baseUrl = baseUrl;
+    this.baseUrl = baseUrl;
 
-      this.provincies = [];
-      this.countries = [];
-      this.provinciesLoading = false;
-      this.countriesLoading = false;
+    this.provincies = [];
+    this.countries = [];
+    this.provinciesLoading = false;
+    this.countriesLoading = false;
   }
 
   getGeneral(): General {
     // Return the General data
     var general: General = {
       email: this.formData.email,
-      password: this.formData.password      
+      password: this.formData.password
     };
     return general;
   }
@@ -41,8 +41,8 @@ export class FormDataService {
     this.formData.email = data.email;
     this.formData.password = data.password;
     // Validate General Step in Workflow
-    
-  }  
+
+  }
 
   getLocation(): Location {
     // Return the Location data
@@ -58,8 +58,8 @@ export class FormDataService {
     this.isLocationFormValid = true;
     this.formData.country = data.country;
     this.formData.province = data.province;
-   
-    
+
+
   }
 
   getFormData(): FormData {
@@ -81,54 +81,54 @@ export class FormDataService {
       this.isLocationFormValid;
   }
 
-  //getCountries() {
-    
-  //    let promise = new Promise<Country[]>((resolve, reject) => {
-  //        /*let apiURL = `${this.baseUrl}RegisterUser/countries`;
-  //        this.http
-  //            .get<Country[]>(apiURL)
-  //            .toPromise()
-  //            .then(
-  //                res => {
-  //                    // Success
-  //                    this.countries = res.map(item => {
-  //                        return new Country(item.code, item.name);
-  //                    });
-  //                    resolve();
-  //                },
-  //                msg => {
-  //                    // Error
-  //                    reject(msg);
-  //                }
-  //            );*/
-  //    });
-  //    return promise;
+  getCountries() {
 
-  //}
+    let promise = new Promise<Country[]>((resolve, reject) => {
+      let apiURL = `${this.baseUrl}RegisterUser/countries`;
+      this.http
+        .get<Country[]>(apiURL)
+        .toPromise()
+        .then(
+          res => {
+            // Success
+            this.countries = res.map(item => {
+              return new Country(item.code, item.name);
+            });
+            resolve();
+          },
+          msg => {
+            // Error
+            reject(msg);
+          }
+        );
+    });
+    return promise;
 
-  //getProvinciesByCountry(code: string) {
-    
+  }
 
-  //    let promise = new Promise<string[]>((resolve, reject) => {
-  //        /*let apiURL = `${this.baseUrl}RegisterUser/provincies/{code}`;
-  //        this.http
-  //            .get<string[]>(apiURL)
-  //            .toPromise()
-  //            .then(
-  //                res => {
-  //                    // Success
-  //                    this.provincies = res.map(item => {
-  //                        return item;                          
-  //                    });
-  //                    resolve();
-  //                },
-  //                msg => {
-  //                    // Error
-  //                    reject(msg);
-  //                }
-  //            );*/
-  //    });
-  //    return promise;
-  //}
-  
+  getProvinciesByCountry(code: string) {
+
+
+    let promise = new Promise<string[]>((resolve, reject) => {
+      let apiURL = `${this.baseUrl}RegisterUser/provincies/` + code;
+      this.http
+        .get<string[]>(apiURL)
+        .toPromise()
+        .then(
+          res => {
+            // Success
+            this.provincies = res.map(item => {
+              return item;
+            });
+            resolve();
+          },
+          msg => {
+            // Error
+            reject(msg);
+          }
+        );
+    });
+    return promise;
+  }
+
 }
