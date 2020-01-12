@@ -50,14 +50,14 @@
           <div class="form-group">
             <label class="control-label" for="country">Country</label>
             <select class="form-control input-md" id="country" name="country">
-              <option *ngFor="let value of countries" [ngValue]="value" selected>{{value}}</option>
+              <option *ngFor="let value of formDataService.countries" [ngValue]="value" selected>{{value}}</option>
             </select>
           </div>
 
           <div class="form-group">
             <label class="control-label" for="province">Province</label>
             <select class="form-control input-md" id="province" name="province">
-              <option *ngFor="let value of provincies" [ngValue]="value" selected>{{value}}</option>
+              <option *ngFor="let value of formDataService.provincies" [ngValue]="value" selected>{{value}}</option>
             </select>
           </div>
           

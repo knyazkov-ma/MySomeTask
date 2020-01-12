@@ -1,8 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormData, General, Location, Country } from './formData.model';
-
-
+import 'rxjs  ';
 
 @Injectable()
 export class FormDataService {
@@ -12,9 +11,19 @@ export class FormDataService {
   private isLocationFormValid: boolean = false;
   private baseUrl: string;
 
+  provincies: string[];
+  countries: Country[];
+  provinciesLoading: boolean;
+  countriesLoading: boolean;
+
   constructor(private http: HttpClient,
     @Inject('BASE_URL') baseUrl: string) {
-    this.baseUrl = baseUrl;
+      this.baseUrl = baseUrl;
+
+      this.provincies = [];
+      this.countries = [];
+      this.provinciesLoading = false;
+      this.countriesLoading = false;
   }
 
   getGeneral(): General {
@@ -72,25 +81,54 @@ export class FormDataService {
       this.isLocationFormValid;
   }
 
-  getCountries(): Country[] {
+  //getCountries() {
     
-    var countries: Country[];
+  //    let promise = new Promise<Country[]>((resolve, reject) => {
+  //        /*let apiURL = `${this.baseUrl}RegisterUser/countries`;
+  //        this.http
+  //            .get<Country[]>(apiURL)
+  //            .toPromise()
+  //            .then(
+  //                res => {
+  //                    // Success
+  //                    this.countries = res.map(item => {
+  //                        return new Country(item.code, item.name);
+  //                    });
+  //                    resolve();
+  //                },
+  //                msg => {
+  //                    // Error
+  //                    reject(msg);
+  //                }
+  //            );*/
+  //    });
+  //    return promise;
 
-    this.http.get<Country[]>(this.baseUrl + 'RegisterUser/countries').subscribe(result => {
-      countries = result;
-    }, error => console.error(error));
+  //}
 
-    return countries;
-  }
+  //getProvinciesByCountry(code: string) {
+    
 
-  getProvinciesByCountry(code: string): string[] {
-    var provincies: string[];
-
-    this.http.get<string[]>(this.baseUrl + 'RegisterUser/provincies/' + code).subscribe(result => {
-      provincies = result;
-    }, error => console.error(error));
-
-    return provincies;
-  }
+  //    let promise = new Promise<string[]>((resolve, reject) => {
+  //        /*let apiURL = `${this.baseUrl}RegisterUser/provincies/{code}`;
+  //        this.http
+  //            .get<string[]>(apiURL)
+  //            .toPromise()
+  //            .then(
+  //                res => {
+  //                    // Success
+  //                    this.provincies = res.map(item => {
+  //                        return item;                          
+  //                    });
+  //                    resolve();
+  //                },
+  //                msg => {
+  //                    // Error
+  //                    reject(msg);
+  //                }
+  //            );*/
+  //    });
+  //    return promise;
+  //}
   
 }

@@ -29,8 +29,8 @@ export class RegisterUserComponent implements OnInit {
 
     this.formData = this.formDataService.getFormData();
 
-    this.countries = this.formDataService.getCountries();
-    this.provincies = this.formDataService.getProvinciesByCountry(this.countries[0].code);
+    /*this.formDataService.getCountries();
+    this.formDataService.getProvinciesByCountry(this.countries[0].code);*/
 
     console.log('General feature loaded!');
   }
