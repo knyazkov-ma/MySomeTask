@@ -32,11 +32,13 @@ namespace MySomeTask.QueryHandlers
         var items = await _cache.AddOrGetExistingAsync("Countries",
             async () =>
             {
-              return await _context.Locations
+              var r = await _context.Locations
                 .Select(l => new CountryDto { Code = l.CountryCode, Name = l.CountryName })
                 .Distinct()
                 .OrderBy(l => l.Name)
                 .ToListAsync();
+
+              return r;
             });
 
         return items;

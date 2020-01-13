@@ -29,10 +29,10 @@ namespace MySomeTask.DataBase.Entities
     public string CountryCode { get; set; }
 
     /// <summary>
-    /// Email (уникальное), используется как логин
+    /// Провинция
     /// </summary>        
     [Required]
-    [StringLength(128)]
+    [StringLength(200)]
     public string ProvinceName { get; set; }
         
   }

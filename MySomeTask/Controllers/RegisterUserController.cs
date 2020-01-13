@@ -1,8 +1,11 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MySomeTask.ApiModels;
 using MySomeTask.CommandHandlers;
 using MySomeTask.Commands;
+using MySomeTask.DataBase;
+using MySomeTask.Validators;
 
 namespace MySomeTask.Controllers
 {
@@ -10,29 +13,27 @@ namespace MySomeTask.Controllers
 	public class RegisterUserController : Controller
 	{
     private readonly IAsyncCommandHandler<CreateAccount> _createAccountCommandHandler;
+    private readonly AccountContext _context;
 
-    public RegisterUserController(IAsyncCommandHandler<CreateAccount> createAccountCommandHandler)
+    public RegisterUserController(IAsyncCommandHandler<CreateAccount> createAccountCommandHandler,
+      AccountContext context)
     {
       _createAccountCommandHandler = createAccountCommandHandler;
+      _context = context;
     }
 
     [HttpGet("emailvalidate")]
     public async Task<IActionResult> GetEmailValidate([FromQuery]string email)
     {
-      if(email == "1")
-        return Ok(null);
+      var validator = new MailValidator(_context);
+      var result = await validator.ValidateAsync(email);
+
+      if (result.IsValid)
+        return Ok();
 
       var r = new
       {
-        domain = new string[]
-        {
-          "Должен быть уникальным",
-          "Не должен быть из стоплиста"
-        },
-        pattern = new string[]
-        {
-          "Должен быть вааалидным"
-        }
+        domain = result.Errors?.Select(e => e.ErrorMessage).ToArray()
       };
 
       return Ok(r);
@@ -41,20 +42,15 @@ namespace MySomeTask.Controllers
     [HttpGet("passwordvalidate")]
     public async Task<IActionResult> GetPasswordValidate([FromQuery]string password)
     {
-      if (password == "1")
-        return Ok(null);
+      var validator = new PasswordValidator();
+      var result = validator.Validate(password);
+
+      if (result.IsValid)
+        return Ok();
 
       var r = new
       {
-        domain = new string[]
-        {
-          "Должен быть клёвым",
-          "Не должен быть не быть клёвым"
-        },
-        pattern = new string[]
-        {
-          "Должен быть вууулидным"
-        }
+        domain = result.Errors?.Select(e => e.ErrorMessage).ToArray()
       };
 
       return Ok(r);

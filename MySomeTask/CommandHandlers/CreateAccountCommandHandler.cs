@@ -1,94 +1,68 @@
+using Microsoft.Extensions.Options;
 using MySomeTask.Commands;
+using MySomeTask.Commands.Validators;
+using MySomeTask.Configurations;
 using MySomeTask.DataBase;
 using MySomeTask.DomainEventHandlers;
+using MySomeTask.DomainEvents;
+using MySomeTask.Services;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using MySomeTask.DataBase.Entities;
 
 namespace MySomeTask.CommandHandlers
 {
   public class CreateAccountCommandHandler : IAsyncCommandHandler<CreateAccount>
   {
     private readonly AccountContext _context;
-    //private readonly StringValidator _stringValidator;
-    //private readonly IOptions<Registration> _config;
-    //private readonly IActivationCodeService _activationCodeService;
-    //private readonly IDateTimeService _dateTimeService;
+    private readonly IOptions<Registration> _config;
+    private readonly IPasswordService _passwordService;
     private readonly IDomainEventDispatcher _domainEventDispatcher;
 
-    //public CreateAccountCommandHandler(AccountContext context,
-    //    StringValidator stringValidator,
-    //    IOptions<Registration> config,
-    //    IActivationCodeService activationCodeService,
-    //    IDateTimeService dateTimeService,
-    //    IDomainEventDispatcher domainEventDispatcher)
-    //{
-    //  _context = context;
-    //  _stringValidator = stringValidator;
-    //  _config = config;
-    //  _activationCodeService = activationCodeService;
-    //  _dateTimeService = dateTimeService;
-    //  _domainEventDispatcher = domainEventDispatcher;
-    //}
+    public CreateAccountCommandHandler(AccountContext context,
+        IOptions<Registration> config,        
+        IPasswordService passwordService,
+        IDomainEventDispatcher domainEventDispatcher)
+    {
+      _context = context;      
+      _config = config;      
+      _passwordService = passwordService;
+      _domainEventDispatcher = domainEventDispatcher;
+    }
 
     public async Task ExecuteAsync(CreateAccount cmd)
     {
 
+      var validator = new CreateAccountValidator(_context);
+      validator.ValidateAndThrow(cmd);
+      
+      var existsAccount = await _context.Accounts.Where(a => a.IP == cmd.IP)
+          .OrderByDescending(a => a.CreatedAt)
+          .FirstOrDefaultAsync();
 
-      //var existsAccount = await _context.Accounts.FirstOrDefaultAsync(a => a.MobilePhone == mobilePhone);
-      //if (existsAccount != null)
-      //  throw new CommandHandlerException($"Пользователь с номером телефона {cmd.MobilePhone} уже зарегистрирован в системе");
+      var currentDateTime = DateTime.Now;
+      var allowedInterval = _config.Value.AllowedIntervalInSeconds;
+      if (existsAccount != null && currentDateTime.Subtract(existsAccount.CreatedAt).Seconds < allowedInterval)
+        throw new CommandHandlerException(403, $"С одного IP разрешено регистрироваться не более одного раза в {allowedInterval} сек.");
 
-      //var email = cmd.Email;
-      //if (!string.IsNullOrWhiteSpace(email))
-      //  email = email.ToLowerInvariant();
+      var account = new Account()
+      {
+        Id = Guid.NewGuid(),
+        CreatedAt = currentDateTime,
+        Email = cmd.Email.ToLower(),
+        Password = _passwordService.GetSha256Hash(cmd.Password),
+        IP = cmd.IP,
+        Country = cmd.Country,
+        Province = cmd.Province        
+      };
+      _context.Accounts.Add(account);
 
-      //existsAccount = await _context.Accounts.FirstOrDefaultAsync(a => a.Email == email);
-      //if (existsAccount != null)
-      //  throw new CommandHandlerException($"Пользователь с {email} уже зарегистрирован в системе");
-
-      //existsAccount = await _context.Accounts.Where(a => a.IP == cmd.IP)
-      //    .OrderByDescending(a => a.CreatedAt)
-      //    .FirstOrDefaultAsync();
-
-      //var currentDateTime = _dateTimeService.GetCurrent();
-      //var allowedInterval = _config.Value.AllowedInterval;
-      //if (existsAccount != null && currentDateTime.Subtract(existsAccount.CreatedAt).Seconds < allowedInterval)
-      //  throw new CommandHandlerException(403, $"С одного IP разрешено регистрироваться не более одного раза в {allowedInterval} сек.");
-
-
-      //_stringValidator.NormalizeAndCheckStringConstraint("Email", ref email, true, StringValidator.StringFormat.Email);
-      //_stringValidator.CheckStringConstraint("Name", cmd.Name, false, 100, 5);
-      //_stringValidator.CheckStringConstraint("Password", cmd.Password, true, 50, 5);
-
-
-      //if (_stringValidator.ErrorMessages.Any())
-      //  throw new CommandHandlerException("Не верно заполнены поля регистрационной формы",
-      //      _stringValidator.ErrorMessages);
-
-      //var activationCode = _activationCodeService.GetNew();
-
-      //currentDateTime = _dateTimeService.GetCurrent();
-      //var account = new Account()
-      //{
-      //  Id = Guid.NewGuid(),
-      //  CreatedAt = currentDateTime,
-      //  MobilePhone = mobilePhone,
-      //  Email = email,
-      //  Name = cmd.Name,
-      //  Password = cmd.Password.GetSha256Hash(),
-      //  ActivationCode = activationCode,
-      //  Roles = _config.Value.DefaultRoles,
-      //  IP = cmd.IP,
-      //  Mailing = true
-      //};
-      //_context.Accounts.Add(account);
-
-      //await _context.SaveChangesAsync();
-
-      //cmd.MobilePhone = mobilePhone;
-      //cmd.Email = email;
-
-      //_domainEventDispatcher.Raise(new CreatedAccountEvent(account));
-      //_domainEventDispatcher.Raise(new CreatedActivationCodeEvent(activationCode, email));
+      await _context.SaveChangesAsync();
+      
+      _domainEventDispatcher.Raise(new CreatedAccountEvent(account));     
 
     }
   }

@@ -9,7 +9,7 @@ namespace MySomeTask.DataBase
             : base(options)
         {
             //Database.EnsureCreated();
-            //Database.Migrate();
+            Database.Migrate();
         }
 
         public DbSet<Account> Accounts { get; set; }

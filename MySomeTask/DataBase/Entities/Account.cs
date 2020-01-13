@@ -18,23 +18,12 @@ namespace MySomeTask.DataBase.Entities
     /// Дата/время создания записи
     /// </summary>        
     public DateTime CreatedAt { get; set; }
-
+    
     /// <summary>
-    /// Дата/время изменения записи
-    /// </summary>        
-    public DateTime? UpdatedAt { get; set; }
-
-    /// <summary>
-    /// Дата/время активации записи
-    /// </summary>        
-    public DateTime? ActivatedAt { get; set; }
-
-    /// <summary>
-    /// IP с которого зарегистрирован пользователь
+    /// IP, с которого зарегистрирован пользователь
     /// </summary>
     [StringLength(20)]
     public string IP { get; set; }
-
     
     /// <summary>
     /// Email (уникальное), используется как логин
@@ -42,14 +31,27 @@ namespace MySomeTask.DataBase.Entities
     [Required]
     [StringLength(128)]
     public string Email { get; set; }
-
     
     /// <summary>
     /// Пароль (хэш)
     /// </summary>
     [StringLength(128)]
     [Required]
-    public string Password { get; set; }
-    
+    public string Password { get; set; }    
+
+    /// <summary>
+    /// Страна
+    /// </summary>
+    [StringLength(200)]
+    [Required]
+    public string Country { get; set; }
+
+    /// <summary>
+    /// Провинция
+    /// </summary>
+    [StringLength(200)]
+    [Required]
+    public string Province { get; set; }
+
   }
 }
