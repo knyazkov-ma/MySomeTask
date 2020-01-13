@@ -5,28 +5,28 @@ import { Observable } from "rxjs";
 import { map, debounceTime, take, switchMap } from "rxjs/operators";
 
 @Directive({
-  selector: '[emailDomain][ngModel]',
+  selector: '[passwordDomain][ngModel]',
   providers: [
     {
       provide: NG_ASYNC_VALIDATORS,
-      useExisting: EmailDomainValidator,
+      useExisting: PasswordDomainValidator,
       multi: true
     }
   ]
 })
-export class EmailDomainValidator implements AsyncValidator {
+export class PasswordDomainValidator implements AsyncValidator {
   constructor(private formDataService: FormDataService) {
 
   }
 
   validate(control: FormControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
-    let email = control.value;
+    let password = control.value;
     
 
-    if (!email)
+    if (!password)
       return null;
 
-    return this.formDataService.getEmailValidationFromServer(email)
+    return this.formDataService.getPasswordValidationFromServer(password)
       .pipe(
         map(res => {
           // if username is already taken

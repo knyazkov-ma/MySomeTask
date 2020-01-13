@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using MySomeTask.ApiModels;
 
 namespace MySomeTask.Controllers
 {
@@ -10,29 +11,55 @@ namespace MySomeTask.Controllers
 	public class RegisterUserController : Controller
 	{
 		
-    [HttpGet("countries")]
-    public IEnumerable<dynamic> GetCountries()
-    {
-      return Enumerable.Range(1, 5).Select(index =>
-        new { code = $"code{index}", name = $"Country {index}" }
-      );
-    }
-
-    [HttpGet("provincies/{code}")]    
-    public IEnumerable<string> GetProvincies([FromRoute]string code)
-    {
-      return Enumerable.Range(1, 5).Select(index => $"{code} - Province {index}");
-    }
-
-
+    
     [HttpGet("emailvalidate")]
-    public IEnumerable<string> GetEmailValidate([FromQuery]string email)
+    public async Task<IActionResult> GetEmailValidate([FromQuery]string email)
     {
-      return new string[]
+      if(email == "1")
+        return Ok(null);
+
+      var r = new
       {
-        "Должен быть уникальным",
-        "Не должен быть из стоплиста"
+        domain = new string[]
+        {
+          "Должен быть уникальным",
+          "Не должен быть из стоплиста"
+        },
+        pattern = new string[]
+        {
+          "Должен быть вааалидным"
+        }
       };
+
+      return Ok(r);
+    }
+
+    [HttpGet("passwordvalidate")]
+    public async Task<IActionResult> GetPasswordValidate([FromQuery]string password)
+    {
+      if (password == "1")
+        return Ok(null);
+
+      var r = new
+      {
+        domain = new string[]
+        {
+          "Должен быть клёвым",
+          "Не должен быть не быть клёвым"
+        },
+        pattern = new string[]
+        {
+          "Должен быть вууулидным"
+        }
+      };
+
+      return Ok(r);
+    }
+
+    [HttpPost("create")]
+    public async Task<IActionResult> Create(RegisterUserModel model)
+    {
+      return Created(string.Empty, null);
     }
   }
   

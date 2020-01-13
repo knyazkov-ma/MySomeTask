@@ -10,38 +10,48 @@
 
           <div class="form-group">
             <label class="control-label" for="email">Email</label>
-            <input class="form-control input-md" #email="ngModel" required emailDomain pattern="^[^\s@]+@[^\s@]+\.[^\s@]{2,}$" id="email" name="email" type="text" placeholder="Email" [(ngModel)]="formData.email">
-            <!--<div class="alert alert-danger" [hidden]="email.valid || !validateStep1">Email is required and must be valid</div>-->
+            <input class="form-control input-md" #email="ngModel" required emailDomain id="email" name="email" type="text" placeholder="Email" [(ngModel)]="formData.email">
 
             <div class="alert alert-danger" *ngIf="email.errors && (email.dirty || email.touched)">
               <div *ngIf="email.errors.required">Email is required</div>
-              <div *ngIf="email.errors.pattern">Email must contain at least the @ character</div>
-              <!--<div *ngIf="email.errors.emailDomain">Email must be on the codecraft.tv domain</div>-->
-              <div *ngIf="email.errors.emailDomain">Email must be on the {{ email.errors.emailDomain.parsedDomain }} domain</div>
+              <div *ngIf="email.errors.pattern">{{ email.errors.pattern }}</div>
+              <div *ngIf="email.errors.domain">{{ email.errors.domain }}</div>
             </div>
 
           </div>
 
           <div class="form-group">
             <label class="control-label" for="password">Password</label>
-            <input class="form-control input-md" #password="ngModel" required id="password" name="password" type="password" [(ngModel)]="formData.password">
-            <div class="alert alert-danger" [hidden]="password.valid || !validateStep1">Password is required and must be valid</div>
+            <input class="form-control input-md" #password="ngModel" required passwordDomain id="password" name="password" type="password" [(ngModel)]="formData.password">
+            <div class="alert alert-danger" *ngIf="password.errors && (password.dirty || password.touched)">
+              <div *ngIf="password.errors.required">Password is required</div>
+              <div *ngIf="password.errors.pattern">{{ password.errors.pattern }}</div>
+              <div *ngIf="password.errors.domain">{{ password.errors.domain }}</div>
+            </div>
           </div>
 
           <div class="form-group">
             <label class="control-label" for="confirmPassword">Confirm password</label>
-            <input class="form-control input-md" #confirmPassword="ngModel" required id="confirmPassword" name="confirmPassword" type="password" [(ngModel)]="formData.confirmPassword">
-            <div class="alert alert-danger" [hidden]="confirmPassword.valid || !validateStep1">Password is required and must be valid</div>
+            <input class="form-control input-md" #confirmPassword="ngModel" required pattern="{{ password.value }}" id="confirmPassword" name="confirmPassword" type="password" [(ngModel)]="formData.confirmPassword">
+
+            <div class="alert alert-danger" *ngIf="confirmPassword.errors && (confirmPassword.dirty || confirmPassword.touched)">
+              <div *ngIf="confirmPassword.errors.required">Confirm password is required</div>
+              <div *ngIf="confirmPassword.errors.pattern">Password & Confirm Password does not match</div>
+            </div>
+
           </div>
 
           <div class="form-group">
-            <input type="checkbox" #agree="ngModel" id="agree" name="agree" [(ngModel)]="formData.agree">&nbsp;
+            <input type="checkbox" #agree="ngModel" id="agree" name="agree" required [(ngModel)]="formData.agree">&nbsp;
             <label class="control-label" for="agree">Agree work for food</label>
-            <div class="alert alert-danger" [hidden]="!formData.agree || !validateStep1">Agree is required</div>
+
+            <div class="alert alert-danger" *ngIf="agree.errors">
+              <div *ngIf="agree.errors.required">Agree work for food is required</div>
+            </div>
           </div>
 
           <div class="form-group text-center">
-            <button class="btn btn-success btn-outline-rounded btn-info" type="button" [disabled]="!isValidStep1" (click)="goToStep2()" nextStep> Go to Step 2 </button>
+            <button class="btn btn-success btn-outline-rounded btn-info" type="button" [disabled]="!isValidStep1()"  nextStep> Go to Step 2 </button>
           </div>
         </div>
       </div>
@@ -57,23 +67,22 @@
 
           <div class="form-group">
             <label class="control-label" for="country">Country</label>
-            <select class="form-control input-md" id="country" required name="country" [ngModel]="selectedCountry" (ngModelChange)="countryChange($event)">
-              <option *ngFor="let value of formDataService.countries" [ngValue]="value" selected>{{value.name}}</option>
+            <select class="form-control input-md" id="country" required name="country" [(ngModel)]="formData.country" [compareWith] = "compareCountry" (ngModelChange)="countryChange($event)">
+              <option *ngFor="let value of countries" [ngValue]="value">{{value.name}}</option>
             </select>
           </div>
 
           <div class="form-group">
             <label class="control-label" for="province">Province</label>
-            <select class="form-control input-md" id="province" required name="province" [ngModel]="selectedProvince" (ngModelChange)="provinceChange($event)">
-              <option *ngFor="let value of formDataService.provincies" [ngValue]="value">{{value}}</option>
+            <select class="form-control input-md" id="province" required name="province" [(ngModel)]="formData.province" (ngModelChange)="provinceChange($event)">
+              <option *ngFor="let value of provincies" [ngValue]="value">{{value}}</option>
             </select>
           </div>
 
           <div class="form-group text-center">
-            <!--<button class="btn btn-success btn-outline-rounded btn-info" [disabled]="!personalForm.valid" (click)="goToNext(personalForm)"> Next <span style="margin-left:10px;" class="glyphicon glyphicon-arrow-right"></span></button>-->
-              <button class="btn btn-success btn-outline-rounded btn-info" type="button" previousStep> Back to Step 1 </button>
-              <button class="btn btn-success btn-outline-rounded btn-info" type="button" nextStep> Save </button>
-            </div>
+            <button class="btn btn-success btn-outline-rounded btn-info" type="button" previousStep> Back to Step 1 </button>
+            <button class="btn btn-success btn-outline-rounded btn-info" type="button" (click)="save()"> Save </button>
+          </div>
         </div>
       </div>
     </div>
@@ -81,4 +90,3 @@
   </wizard-step>
 
 </wizard>
-

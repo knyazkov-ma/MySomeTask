@@ -9,12 +9,14 @@ import { ArchwizardModule } from '../../node_modules/ng2-archwizard';
 
 import { FormDataService } from './data/formData.service';
 import { EmailDomainValidator } from './validators/email-domain.validator';
+import { PasswordDomainValidator } from './validators/password-domain.validator';
 
 @NgModule({
   declarations: [
     AppComponent,
     RegisterUserComponent,
-    EmailDomainValidator
+    EmailDomainValidator,
+    PasswordDomainValidator
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
