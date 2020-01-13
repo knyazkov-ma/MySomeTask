@@ -1,27 +1,35 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using MySomeTask.Dto;
+using MySomeTask.Queries;
+using MySomeTask.QueryHandlers;
 
 namespace MySomeTask.Controllers
 {
-	[Route("api/v1/[controller]")]
+  [Route("api/v1/[controller]")]
 	public class LocationController : Controller
 	{
-		
-    [HttpGet("countries")]
-    public IEnumerable<dynamic> GetCountries()
+    private readonly IAsyncQueryHandler<GetCountries, IEnumerable<CountryDto>> _getCountriesQueryHandler;
+    private readonly IAsyncQueryHandler<GetProvincies, IEnumerable<string>> _getProvinciesQueryHandler;
+
+    public LocationController(IAsyncQueryHandler<GetCountries, IEnumerable<CountryDto>> getCountriesQueryHandler,
+      IAsyncQueryHandler<GetProvincies, IEnumerable<string>> getProvinciesQueryHandler)
     {
-      return Enumerable.Range(1, 5).Select(index =>
-        new { code = $"code{index}", name = $"Country {index}" }
-      );
+      _getCountriesQueryHandler = getCountriesQueryHandler;
+      _getProvinciesQueryHandler = getProvinciesQueryHandler;
+    }
+
+    [HttpGet("countries")]
+    public async Task<IEnumerable<CountryDto>> GetCountries()
+    {
+      return await _getCountriesQueryHandler.ExecuteAsync(new GetCountries());
     }
 
     [HttpGet("provincies/{code}")]    
-    public IEnumerable<string> GetProvincies([FromRoute]string code)
+    public async Task<IEnumerable<string>> GetProvincies([FromRoute]string code)
     {
-      return Enumerable.Range(1, 5).Select(index => $"{code} - Province {index}");
+      return await _getProvinciesQueryHandler.ExecuteAsync(new GetProvincies { CountryCode = code });
     }
     
   }

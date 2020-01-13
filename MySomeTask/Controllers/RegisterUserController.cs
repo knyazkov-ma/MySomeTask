@@ -1,17 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MySomeTask.ApiModels;
+using MySomeTask.CommandHandlers;
+using MySomeTask.Commands;
 
 namespace MySomeTask.Controllers
 {
-	[Route("api/v1/[controller]")]
+  [Route("api/v1/[controller]")]
 	public class RegisterUserController : Controller
 	{
-		
-    
+    private readonly IAsyncCommandHandler<CreateAccount> _createAccountCommandHandler;
+
+    public RegisterUserController(IAsyncCommandHandler<CreateAccount> createAccountCommandHandler)
+    {
+      _createAccountCommandHandler = createAccountCommandHandler;
+    }
+
     [HttpGet("emailvalidate")]
     public async Task<IActionResult> GetEmailValidate([FromQuery]string email)
     {
@@ -59,7 +63,14 @@ namespace MySomeTask.Controllers
     [HttpPost]
     public async Task<IActionResult> Create([FromBody]RegisterUserModel model)
     {
-      int a = 1;
+      await _createAccountCommandHandler.ExecuteAsync(new CreateAccount
+      {
+        Email = model.Email,
+        Password = model.Password,
+        Country = model.Country,
+        Province = model.Province,
+        IP = HttpContext.Connection.RemoteIpAddress != null ? HttpContext.Connection.RemoteIpAddress.ToString() : null
+      });
       return Created(string.Empty, null);
     }
   }
