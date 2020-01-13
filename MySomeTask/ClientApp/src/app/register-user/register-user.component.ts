@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormData, General, Location, Country } from '../data/formData.model';
 import { FormDataService } from '../data/formData.service';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+
 
 
 @Component({
@@ -16,30 +18,33 @@ export class RegisterUserComponent implements OnInit {
   validateStep1: boolean;
   selectedCountry: Country;
   selectedProvince: string;
+  form: FormGroup;
+  
+  provincies: string[] = [];
+  countries: Country[] = [];
 
-  constructor(private formDataService: FormDataService) {
+  constructor(private formDataService: FormDataService,
+    private fb: FormBuilder) {
     this.selectedCountry = null;
-    this.selectedProvince = null;
+    this.selectedProvince = null;    
   }
 
 
 
-  ngOnInit() {
+  async ngOnInit() {
+    
+
     this.isValidStep1 = true;
     this.validateStep1 = false;
 
     this.formData = this.formDataService.getFormData();
 
-    this.formDataService.getCountries()
-      .then(_ => {
-        this.selectedCountry = this.formDataService.countries[0];
-        this.formDataService.getProvinciesByCountry(this.formDataService.countries[0].code)
-          .then(_ => {
-            this.selectedProvince = this.formDataService.provincies[0];
-          });
-      });
+    this.countries = await this.formDataService.getCountries();
+    this.selectedCountry = this.countries[0];
+    this.provincies = await this.formDataService.getProvinciesByCountry(this.countries[0].code);
+    this.selectedProvince = this.provincies[0];
 
-
+    
     console.log('General feature loaded!');
   }
 
@@ -49,15 +54,14 @@ export class RegisterUserComponent implements OnInit {
     this.isValidStep1 = false;
   }
 
-  countryChange(value) {
+  async countryChange(value) {
     this.selectedCountry = value;
-    this.formDataService.getProvinciesByCountry(value.code)
-      .then(_ => {
-        this.selectedProvince = this.formDataService.provincies[0];
-      });
+    this.provincies = await this.formDataService.getProvinciesByCountry(value.code);
+    this.selectedProvince = this.provincies[0];
   }
 
   provinceChange(value) {
     this.selectedProvince = value;    
   }
+  
 }

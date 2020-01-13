@@ -1,6 +1,8 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormData, General, Location, Country } from './formData.model';
+import { Observable, timer } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 
 @Injectable()
@@ -11,19 +13,13 @@ export class FormDataService {
   private isLocationFormValid: boolean = false;
   private baseUrl: string;
 
-  provincies: string[];
-  countries: Country[];
-  provinciesLoading: boolean;
-  countriesLoading: boolean;
+  emailValidateResults: string[];
+  
 
   constructor(private http: HttpClient,
     @Inject('BASE_URL') baseUrl: string) {
     this.baseUrl = baseUrl;
 
-    this.provincies = [];
-    this.countries = [];
-    this.provinciesLoading = false;
-    this.countriesLoading = false;
   }
 
   getGeneral(): General {
@@ -81,54 +77,27 @@ export class FormDataService {
       this.isLocationFormValid;
   }
 
-  getCountries() {
+  async getCountries() {
 
-    let promise = new Promise<Country[]>((resolve, reject) => {
-      let apiURL = `${this.baseUrl}RegisterUser/countries`;
-      this.http
-        .get<Country[]>(apiURL)
-        .toPromise()
-        .then(
-          res => {
-            // Success
-            this.countries = res.map(item => {
-              return new Country(item.code, item.name);
-            });
-            resolve();
-          },
-          msg => {
-            // Error
-            reject(msg);
-          }
-        );
-    });
-    return promise;
-
+    let apiURL = `${this.baseUrl}RegisterUser/countries`;
+    return await this.http
+      .get<Country[]>(apiURL)
+      .toPromise();
   }
 
-  getProvinciesByCountry(code: string) {
+  async getProvinciesByCountry(code: string) {
+
+    let apiURL = `${this.baseUrl}RegisterUser/provincies/${code}`;
+    return await this.http
+      .get<string[]>(apiURL)
+      .toPromise();
+  }
 
 
-    let promise = new Promise<string[]>((resolve, reject) => {
-      let apiURL = `${this.baseUrl}RegisterUser/provincies/` + code;
-      this.http
-        .get<string[]>(apiURL)
-        .toPromise()
-        .then(
-          res => {
-            // Success
-            this.provincies = res.map(item => {
-              return item;
-            });
-            resolve();
-          },
-          msg => {
-            // Error
-            reject(msg);
-          }
-        );
-    });
-    return promise;
+  getEmailValidationFromServer(email: string) {
+    let apiURL = `${this.baseUrl}RegisterUser/emailvalidate?email=${email}`;
+    
+    return this.http.get<any>(apiURL);
   }
 
 }

@@ -27,9 +27,6 @@ export class Location {
 }
 
 export class Country {
-    //code: string;
-    //name: string;
-
     constructor(
         public code: string,
         public name: string

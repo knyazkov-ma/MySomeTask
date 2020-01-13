@@ -23,5 +23,17 @@ namespace MySomeTask.Controllers
     {
       return Enumerable.Range(1, 5).Select(index => $"{code} - Province {index}");
     }
+
+
+    [HttpGet("emailvalidate")]
+    public IEnumerable<string> GetEmailValidate([FromQuery]string email)
+    {
+      return new string[]
+      {
+        "Должен быть уникальным",
+        "Не должен быть из стоплиста"
+      };
+    }
   }
+  
 }
