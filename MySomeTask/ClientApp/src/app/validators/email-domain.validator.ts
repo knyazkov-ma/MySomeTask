@@ -1,8 +1,8 @@
-import { Directive, Injector, ReflectiveInjector } from '@angular/core';
-import { NG_ASYNC_VALIDATORS, NG_VALIDATORS, FormControl, AsyncValidator, ValidationErrors } from '@angular/forms';
+import { Directive } from '@angular/core';
+import { NG_ASYNC_VALIDATORS, FormControl, AsyncValidator, ValidationErrors } from '@angular/forms';
 import { FormDataService } from '../data/formData.service';
 import { Observable } from "rxjs";
-import { map, debounceTime, take, switchMap } from "rxjs/operators";
+import { map } from "rxjs/operators";
 
 @Directive({
   selector: '[emailDomain][ngModel]',

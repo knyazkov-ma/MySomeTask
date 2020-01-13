@@ -1,8 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormData, Country } from './formData.model';
-import { Observable, timer } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+
 
 
 @Injectable()
@@ -53,10 +52,10 @@ export class FormDataService {
   }
 
   save(data: FormData) {
-    let apiURL = `${this.baseUrl}RegisterUser/create`;
+    let apiURL = `${this.baseUrl}RegisterUser`;
 
     return this.http
-      .post<any>(apiURL,
+      .post(apiURL,
         {
           email: data.email,
           password: data.password,

@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormData, Country } from '../data/formData.model';
 import { FormDataService } from '../data/formData.service';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-
 
 
 @Component({
@@ -42,11 +40,7 @@ export class RegisterUserComponent implements OnInit {
     return this.selectedCountry.valid
       && this.selectedProvince.valid
   }
-
-  compareCountry(a, b) {    
-    return a.code === b.code;
-  }
-
+    
   async ngOnInit() {
     
     console.log(this.email);
@@ -71,7 +65,7 @@ export class RegisterUserComponent implements OnInit {
   }
 
   save() {
-    this.formDataService.save(this.formData);
+    this.formDataService.save(this.formData).subscribe((res) => { });
   }
   
 }

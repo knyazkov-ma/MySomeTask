@@ -67,7 +67,7 @@
 
           <div class="form-group">
             <label class="control-label" for="country">Country</label>
-            <select class="form-control input-md" id="country" required name="country" [(ngModel)]="formData.country" [compareWith] = "compareCountry" (ngModelChange)="countryChange($event)">
+            <select class="form-control input-md" id="country" required name="country" [(ngModel)]="formData.country" (ngModelChange)="countryChange($event)">
               <option *ngFor="let value of countries" [ngValue]="value">{{value.name}}</option>
             </select>
           </div>

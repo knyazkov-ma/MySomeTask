@@ -56,9 +56,10 @@ namespace MySomeTask.Controllers
       return Ok(r);
     }
 
-    [HttpPost("create")]
-    public async Task<IActionResult> Create(RegisterUserModel model)
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody]RegisterUserModel model)
     {
+      int a = 1;
       return Created(string.Empty, null);
     }
   }
