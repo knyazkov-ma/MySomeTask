@@ -65,7 +65,7 @@ namespace MySomeTask.Controllers
         Password = model.Password,
         Country = model.Country,
         Province = model.Province,
-        IP = HttpContext.Connection.RemoteIpAddress != null ? HttpContext.Connection.RemoteIpAddress.ToString() : null
+        IP = HttpContext.Connection.RemoteIpAddress?.ToString()
       });
       return Created(string.Empty, null);
     }
