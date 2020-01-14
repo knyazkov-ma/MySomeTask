@@ -19,7 +19,9 @@ namespace MySomeTask.Validators
       RuleFor(password => password)
                 .NotEmpty()
                 .MinimumLength(6)
+                  .WithMessage("Password min 6 chars")
                 .MaximumLength(15)
+                  .WithMessage("Password max 15 chars")
                 .Must((password, val) => IsValid(password))
                   .WithMessage("Password must contain min 1 digit and min 1 letter");
                 

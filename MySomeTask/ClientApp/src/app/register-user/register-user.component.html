@@ -12,7 +12,7 @@
             <label class="control-label" for="email">Email</label>
             <input class="form-control input-md" #email="ngModel" required emailDomain id="email" name="email" type="text" placeholder="Email" [(ngModel)]="formData.email">
 
-            <div class="alert alert-danger" *ngIf="email.errors && (email.dirty || email.touched)">
+            <div class="alert alert-danger" *ngIf="email.errors && (email.touched)">
               <div *ngIf="email.errors.required">Email is required</div>
               <div *ngIf="email.errors.pattern">{{ email.errors.pattern }}</div>
               <div *ngIf="email.errors.domain">{{ email.errors.domain }}</div>
@@ -23,8 +23,8 @@
 
           <div class="form-group">
             <label class="control-label" for="password">Password</label>
-            <input class="form-control input-md" #password="ngModel" required passwordDomain id="password" name="password" type="password" [(ngModel)]="formData.password">
-            <div class="alert alert-danger" *ngIf="password.errors && (password.dirty || password.touched)">
+            <input class="form-control input-md" #password="ngModel" required passwordDomain id="password" name="password" type="password" placeholder="Password" [(ngModel)]="formData.password">
+            <div class="alert alert-danger" *ngIf="password.errors && (password.touched)">
               <div *ngIf="password.errors.required">Password is required</div>
               <div *ngIf="password.errors.pattern">{{ password.errors.pattern }}</div>
               <div *ngIf="password.errors.domain">{{ password.errors.domain }}</div>
@@ -34,7 +34,7 @@
 
           <div class="form-group">
             <label class="control-label" for="confirmPassword">Confirm password</label>
-            <input class="form-control input-md" #confirmPassword="ngModel" required pattern="{{ password.value }}" id="confirmPassword" name="confirmPassword" type="password" [(ngModel)]="formData.confirmPassword">
+            <input class="form-control input-md" #confirmPassword="ngModel" required pattern="{{ password.value }}" id="confirmPassword" name="confirmPassword" type="password" placeholder="ConfirmPassword" [(ngModel)]="formData.confirmPassword">
 
             <div class="alert alert-danger" *ngIf="confirmPassword.errors && (confirmPassword.dirty || confirmPassword.touched)">
               <div *ngIf="confirmPassword.errors.required">Confirm password is required</div>
