@@ -10,7 +10,7 @@ import { FormDataService } from '../data/formData.service';
 
 export class RegisterUserComponent implements OnInit {
 
-
+  error = null;
   formData: FormData;
     
       
@@ -65,7 +65,15 @@ export class RegisterUserComponent implements OnInit {
   }
 
   save() {
-    this.formDataService.save(this.formData).subscribe((res) => { });
-  }
+    this.formDataService.save(this.formData).subscribe(
+      success => {
+        this.error = null;
+        alert('Register user success!')
+      },
+      error => {
+        this.error = error.error;        
+        console.log(error);
+      });
+  } 
   
 }

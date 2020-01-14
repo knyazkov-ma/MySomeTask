@@ -10,6 +10,7 @@ using MySomeTask.CommandHandlers;
 using MySomeTask.DataBase;
 using MySomeTask.DomainEventHandlers;
 using MySomeTask.Loggers;
+using MySomeTask.Middlewares;
 using MySomeTask.QueryHandlers;
 using MySomeTask.Services;
 using System;
@@ -38,7 +39,6 @@ namespace MySomeTask
       }
 
       services.AddOptions();
-      services.Configure<Configurations.Activation>(Configuration.GetSection("Activation"));
       services.Configure<Configurations.Cache>(Configuration.GetSection("Cache"));
       services.Configure<Configurations.NotificationsGateway>(Configuration.GetSection("NotificationsGateway"));
       services.Configure<Configurations.Registration>(Configuration.GetSection("Registration"));
@@ -117,14 +117,24 @@ namespace MySomeTask
 			app.UseStaticFiles();
 			app.UseSpaStaticFiles();
 
-			app.UseMvc(routes =>
+
+      #region custom middleware
+      // обработка CommandHandlerException
+      app.UseCommandHandlerExceptionMiddleware();
+      // логирование ошибок
+      //app.UseExceptionMiddleware();            
+      #endregion custom middleware
+
+      app.UseMvc(routes =>
 			{
 				routes.MapRoute(
 					name: "default",
 					template: "{controller}/{action=Index}/{id?}");
 			});
 
-			app.UseSpa(spa =>
+      
+
+      app.UseSpa(spa =>
 			{
 				// To learn more about options for serving an Angular SPA from ASP.NET Core,
 				// see https://go.microsoft.com/fwlink/?linkid=864501

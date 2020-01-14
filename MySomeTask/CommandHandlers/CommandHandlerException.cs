@@ -14,12 +14,12 @@ namespace MySomeTask.CommandHandlers
     /// Подробное описание ошибок, связанных со свойствами команды. 
     /// Свойство команды является ключем.
     /// </summary>
-    public IDictionary<string, IEnumerable<string>> Details { get; private set; }
-    public int HttpCode { get; private set; }
+    public IDictionary<string, IList<string>> Details { get; private set; }
+    public int HttpCode { get; set; } = 422;
 
     public CommandHandlerException(string message) : base(message)
     {
-      HttpCode = 422;
+      
     }
 
     public CommandHandlerException(int httpCode, string message) : base(message)
@@ -27,14 +27,28 @@ namespace MySomeTask.CommandHandlers
       HttpCode = httpCode;
     }
 
-    public CommandHandlerException(string message, IDictionary<string, IEnumerable<string>> details) : this(message)
+    public CommandHandlerException(string message, IDictionary<string, IList<string>> details) : this(message)
     {
       Details = details;
     }
 
-    public static void Throw(ValidationResult validationResult)
+    public static void ThrowIsNotValid(string message, ValidationResult validationResult)
     {
-      var ex = new CommandHandlerException(null);
+      if (validationResult.IsValid)
+        return;
+
+      var details = new Dictionary<string, IList<string>>();
+
+      foreach (var error in validationResult.Errors)
+      {
+        if (details.ContainsKey(error.PropertyName))
+          details[error.PropertyName].Add(error.ErrorMessage);
+        else
+          details[error.PropertyName] = new List<string> { error.ErrorMessage };
+      }
+
+      var ex = new CommandHandlerException(message, details);
+
       throw ex;
     }
   }

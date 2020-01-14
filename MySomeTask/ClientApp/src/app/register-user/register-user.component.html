@@ -18,6 +18,9 @@
               <div *ngIf="email.errors.domain">{{ email.errors.domain }}</div>
             </div>
 
+            <div class="alert alert-danger" *ngIf="error && error.errorDetails && error.errorDetails.Email">
+              <div>{{ error.errorDetails.Email }}</div>
+            </div>
           </div>
 
           <div class="form-group">
@@ -27,6 +30,10 @@
               <div *ngIf="password.errors.required">Password is required</div>
               <div *ngIf="password.errors.pattern">{{ password.errors.pattern }}</div>
               <div *ngIf="password.errors.domain">{{ password.errors.domain }}</div>
+            </div>
+
+            <div class="alert alert-danger" *ngIf="error && error.errorDetails && error.errorDetails.Password">
+              <div>{{ error.errorDetails.Password }}</div>
             </div>
           </div>
 
@@ -51,7 +58,7 @@
           </div>
 
           <div class="form-group text-center">
-            <button class="btn btn-success btn-outline-rounded btn-info" type="button" [disabled]="!isValidStep1()"  nextStep> Go to Step 2 </button>
+            <button class="btn btn-success btn-outline-rounded btn-info" type="button" [disabled]="!isValidStep1()" nextStep> Go to Step 2 </button>
           </div>
         </div>
       </div>
@@ -70,6 +77,10 @@
             <select class="form-control input-md" id="country" required name="country" [(ngModel)]="formData.country" (ngModelChange)="countryChange($event)">
               <option *ngFor="let value of countries" [ngValue]="value">{{value.name}}</option>
             </select>
+
+            <div class="alert alert-danger" *ngIf="error && error.errorDetails && error.errorDetails.Country">
+              <div>{{ error.errorDetails.Country }}</div>
+            </div>
           </div>
 
           <div class="form-group">
@@ -77,12 +88,18 @@
             <select class="form-control input-md" id="province" required name="province" [(ngModel)]="formData.province" (ngModelChange)="provinceChange($event)">
               <option *ngFor="let value of provincies" [ngValue]="value">{{value}}</option>
             </select>
+
+            <div class="alert alert-danger" *ngIf="error && error.errorDetails && error.errorDetails.Province">
+              <div>{{ error.errorDetails.Province }}</div>
+            </div>
           </div>
 
           <div class="form-group text-center">
             <button class="btn btn-success btn-outline-rounded btn-info" type="button" previousStep> Back to Step 1 </button>
             <button class="btn btn-success btn-outline-rounded btn-info" type="button" (click)="save()"> Save </button>
           </div>
+
+
         </div>
       </div>
     </div>
@@ -90,3 +107,14 @@
   </wizard-step>
 
 </wizard>
+
+<div class="alert alert-danger" *ngIf="error && error.errorMessage">
+  <div>{{ error.errorMessage }}</div>
+</div>
+
+<div class="alert alert-danger" *ngIf="error && error.errorDetails">
+  <div *ngIf="error.errorDetails.Email">Email: {{ error.errorDetails.Email }}</div>
+  <div *ngIf="error.errorDetails.Password">Password: {{ error.errorDetails.Password }}</div>
+  <div *ngIf="error.errorDetails.Country">Country: {{ error.errorDetails.Country }}</div>
+  <div *ngIf="error.errorDetails.Province">Province: {{ error.errorDetails.Province }}</div>
+</div>

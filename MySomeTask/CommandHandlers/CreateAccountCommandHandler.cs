@@ -39,10 +39,9 @@ namespace MySomeTask.CommandHandlers
 
     public async Task ExecuteAsync(CreateAccount cmd)
     {
-
       var validator = new CreateAccountValidator(_context);
       var validationResult = validator.Validate(cmd);
-      CommandHandlerException.Throw(validationResult);
+      CommandHandlerException.ThrowIsNotValid("Ошибочные значения параметров", validationResult);
 
       var existsAccount = await _context.Accounts.Where(a => a.IP == cmd.IP)
           .OrderByDescending(a => a.CreatedAt)
