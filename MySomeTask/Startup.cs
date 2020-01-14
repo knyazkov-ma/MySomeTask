@@ -9,6 +9,7 @@ using MySomeTask.Cache;
 using MySomeTask.CommandHandlers;
 using MySomeTask.DataBase;
 using MySomeTask.DomainEventHandlers;
+using MySomeTask.Loggers;
 using MySomeTask.QueryHandlers;
 using MySomeTask.Services;
 using System;
@@ -92,6 +93,10 @@ namespace MySomeTask
       services.AddTransient<IDomainEventHandlerFactory, ContainerDomainEventHandlerFactory>();
       services.AddTransient<IDomainEventDispatcher, DefaultDomainEventDispatcher>();
       #endregion DomainEventHandlers
+
+      #region Loggers
+      services.AddSingleton<ILoggerService, SerilogLoggerService>();
+      #endregion Loggers
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

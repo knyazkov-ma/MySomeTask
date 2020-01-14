@@ -12,28 +12,30 @@ namespace MySomeTask.DataBase.Entities
   public class Location
   {
     [Key]
-    public Guid Id { get; set; }
+    public Guid Id { private set; get; }
     
     /// <summary>
     /// Страна (наименование)
     /// </summary>
     [Required]
     [StringLength(200)]
-    public string CountryName { get; set; }
+    public string CountryName { private set; get; }
 
     /// <summary>
     /// Страна (код)
     /// </summary>
     [Required]
     [StringLength(10)]
-    public string CountryCode { get; set; }
+    public string CountryCode { private set; get; }
 
     /// <summary>
     /// Провинция
     /// </summary>        
     [Required]
     [StringLength(200)]
-    public string ProvinceName { get; set; }
-        
+    public string ProvinceName { private set; get; }
+
+    // For EF only
+    private Location() { }
   }
 }

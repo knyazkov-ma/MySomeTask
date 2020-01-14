@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using MySomeTask.Cache;
 using System;
-using Serilog;
+using MySomeTask.Loggers;
 
 namespace MySomeTask.QueryHandlers
 {
@@ -15,11 +15,15 @@ namespace MySomeTask.QueryHandlers
   {
     private readonly AccountContext _context;
     private readonly ProvinceCache _cache;
+    private readonly ILoggerService _loggerService;
+
     public GetProvinciesQueryHandler(AccountContext context,
-      ProvinceCache cache)
+      ProvinceCache cache,
+      ILoggerService loggerService)
     {
       _context = context;
       _cache = cache;
+      _loggerService = loggerService;
     }
 
     public async Task<IEnumerable<string>> ExecuteAsync(GetProvincies query)
@@ -42,7 +46,7 @@ namespace MySomeTask.QueryHandlers
       }
       catch (Exception ex)
       {
-        Log.Error(ex, ex.Message);
+        _loggerService.LogError(ex, ex.Message);
         return null;
       }
     }

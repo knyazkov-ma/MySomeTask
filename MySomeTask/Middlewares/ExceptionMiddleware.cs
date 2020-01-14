@@ -1,45 +1,47 @@
 using MySomeTask.CommandHandlers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Serilog;
 using System;
 using System.Threading.Tasks;
+using MySomeTask.Loggers;
 
 namespace MySomeTask.Middlewares
 {
-    public class ExceptionMiddleware
+  public class ExceptionMiddleware
+  {
+    private readonly RequestDelegate _next;
+
+    public ExceptionMiddleware(RequestDelegate next)
     {
-        private readonly RequestDelegate _next;
-
-        public ExceptionMiddleware(RequestDelegate next)
-        {
-            _next = next;
-        }
-
-        public async Task InvokeAsync(HttpContext httpContext)
-        {
-            try
-            {
-                // todo, add exception handler that will logs errors and raise needed exception 500 or 400
-                await _next(httpContext);
-            }
-            catch (Exception ex)
-            {
-                if (ex is CommandHandlerException)
-                    return;
-
-                Log.Error(ex, ex.Message);
-                throw;
-            }
-        }
+      _next = next;
     }
 
-    // Extension method used to add the middleware to the HTTP request pipeline.
-    public static class ExceptionMiddlewareExtensions
+    public async Task InvokeAsync(HttpContext httpContext)
     {
-        public static IApplicationBuilder UseExceptionMiddleware(this IApplicationBuilder builder)
-        {
-            return builder.UseMiddleware<ExceptionMiddleware>();
-        }
+      var loggerService = (ILoggerService)httpContext.RequestServices.GetService(typeof(ILoggerService));
+
+      try
+      {
+        // todo, add exception handler that will logs errors and raise needed exception 500 or 400
+        await _next(httpContext);
+      }
+      catch (Exception ex)
+      {
+        if (ex is CommandHandlerException)
+          return;
+
+        loggerService.LogError(ex, ex.Message);
+        throw;
+      }
     }
+  }
+
+  // Extension method used to add the middleware to the HTTP request pipeline.
+  public static class ExceptionMiddlewareExtensions
+  {
+    public static IApplicationBuilder UseExceptionMiddleware(this IApplicationBuilder builder)
+    {
+      return builder.UseMiddleware<ExceptionMiddleware>();
+    }
+  }
 }

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using FluentValidation;
+using FluentValidation.Results;
 
 namespace MySomeTask.CommandHandlers
 {
@@ -28,6 +30,12 @@ namespace MySomeTask.CommandHandlers
     public CommandHandlerException(string message, IDictionary<string, IEnumerable<string>> details) : this(message)
     {
       Details = details;
+    }
+
+    public static void Throw(ValidationResult validationResult)
+    {
+      var ex = new CommandHandlerException(null);
+      throw ex;
     }
   }
 }
