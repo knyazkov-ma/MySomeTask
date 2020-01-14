@@ -29,11 +29,8 @@ export class PasswordDomainValidator implements AsyncValidator {
     return this.formDataService.getPasswordValidationFromServer(password)
       .pipe(
         map(res => {
-          // if username is already taken
-          if (res) {
-            // return error
+          if (res)
             return res;
-          }
 
           return null;
         })

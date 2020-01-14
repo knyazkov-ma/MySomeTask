@@ -29,11 +29,8 @@ export class EmailDomainValidator implements AsyncValidator {
     return this.formDataService.getEmailValidationFromServer(email)
       .pipe(
         map(res => {
-          // if username is already taken
-          if (res) {
-            // return error
-            return res;
-          }
+          if (res)
+            return res;          
 
           return null;
         })
