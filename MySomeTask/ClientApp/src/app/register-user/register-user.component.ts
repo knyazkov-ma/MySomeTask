@@ -22,6 +22,7 @@ export class RegisterUserComponent implements OnInit {
   @ViewChild('confirmPassword') confirmPassword;
   @ViewChild('agree') agree;
   
+  
   constructor(private formDataService: FormDataService) {
     
   }
@@ -60,7 +61,17 @@ export class RegisterUserComponent implements OnInit {
         alert('Register user success!')
       },
       error => {
-        this.error = error.error;        
+        this.error = error.error;
+
+        if (this.error && this.error.errorDetails) {
+          if (this.error.errorDetails.Email) {
+            this.email.control.setErrors({ 'domain': this.error.errorDetails.Email });
+          }
+          if (this.error.errorDetails.Password) {
+            this.password.control.setErrors({ 'domain': this.error.errorDetails.Password });
+          }          
+        }
+
         console.log(error);
       });
   } 
