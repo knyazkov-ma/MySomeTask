@@ -66,7 +66,6 @@ namespace MySomeTask
       #endregion Cache
 
       #region Services
-      services.AddTransient<IActivationCodeService, ActivationCodeService>();
       services.AddTransient<IPasswordService, PasswordService>();
       #endregion Services
 
@@ -121,8 +120,6 @@ namespace MySomeTask
       #region custom middleware
       // обработка CommandHandlerException
       app.UseCommandHandlerExceptionMiddleware();
-      // логирование ошибок
-      //app.UseExceptionMiddleware();            
       #endregion custom middleware
 
       app.UseMvc(routes =>

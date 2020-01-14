@@ -21,10 +21,7 @@ export class RegisterUserComponent implements OnInit {
   @ViewChild('password') password;
   @ViewChild('confirmPassword') confirmPassword;
   @ViewChild('agree') agree;
-
-  @ViewChild('selectedCountry') selectedCountry;
-  @ViewChild('selectedProvince') selectedProvince;
-
+  
   constructor(private formDataService: FormDataService) {
     
   }
@@ -34,12 +31,7 @@ export class RegisterUserComponent implements OnInit {
       && this.password.valid
       && this.confirmPassword.valid
       && this.agree.valid
-  }
-
-  isValidStep2(): boolean {
-    return this.selectedCountry.valid
-      && this.selectedProvince.valid
-  }
+  }  
     
   async ngOnInit() {
     
@@ -59,10 +51,7 @@ export class RegisterUserComponent implements OnInit {
     this.provincies = await this.formDataService.getProvinciesByCountry(value.code);
     this.formData.province = this.provincies[0];
   }
-
-  provinceChange(value) {
-    this.formData.province = value;    
-  }
+    
 
   save() {
     this.formDataService.save(this.formData).subscribe(
