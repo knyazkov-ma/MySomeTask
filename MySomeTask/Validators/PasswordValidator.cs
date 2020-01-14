@@ -10,7 +10,7 @@ namespace MySomeTask.Validators
     /// </summary>        
     private bool IsValid(string email)
     {
-      var pattern = @"[A-Z]+|\d+";      
+      var pattern = @"[0-9]+[A-Za-z]+|[A-Za-z]+[0-9]+";      
       return Regex.IsMatch(email, pattern);
     }
 
@@ -21,7 +21,7 @@ namespace MySomeTask.Validators
                 .MinimumLength(6)
                 .MaximumLength(15)
                 .Must((password, val) => IsValid(password))
-                  .WithMessage("Password must valid");
+                  .WithMessage("Password must contain min 1 digit and min 1 letter");
                 
     }
   }
