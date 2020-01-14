@@ -58,7 +58,8 @@ export class RegisterUserComponent implements OnInit {
     this.formDataService.save(this.formData).subscribe(
       success => {
         this.error = null;
-        alert('Register user success!')
+        alert('Register user success!');
+        window.location.reload();
       },
       error => {
         this.error = error.error;
